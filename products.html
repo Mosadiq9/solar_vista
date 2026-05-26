@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Products | SolarVista</title>
+  <meta name="description" content="Explore our premium lineup of solar energy hardware, from high-efficiency solar panels to next-generation battery storage.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/sections.css">
+  
+  <style>
+    .storefront-header {
+      padding: 180px 0 80px 0;
+      text-align: center;
+      background: radial-gradient(circle at top, rgba(245, 158, 11, 0.1) 0%, var(--bg-primary) 60%);
+    }
+    .storefront-header h1 {
+      font-size: 3.5rem;
+      margin-bottom: 24px;
+    }
+    .storefront-header p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+      gap: 32px;
+      padding: 60px 0 120px 0;
+    }
+    .product-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 32px;
+      transition: var(--transition-base);
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+    .product-icon-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: rgba(245, 158, 11, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      color: var(--accent-solar);
+    }
+    .product-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .product-category {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+    }
+    .product-desc {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 24px;
+      flex: 1;
+    }
+    .product-specs-mini {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--glass-border);
+    }
+    .spec-mini-val { font-size: 1.25rem; font-weight: 700; font-family: var(--font-display); }
+    .spec-mini-lbl { font-size: 0.85rem; color: var(--text-secondary); }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <!-- Minimal Nav -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">
+        <i data-lucide="sun" class="logo-icon text-solar"></i>
+        <span>SolarVista</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Back to Home</a>
+        <a href="index.html#contact" class="btn btn-primary">Get Free Quote</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="storefront-header">
+      <div class="container">
+        <h1>Complete Energy Catalog</h1>
+        <p>Explore our premium lineup of hardware, from high-efficiency solar panels to next-generation battery storage.</p>
+      </div>
+    </section>
+
+    <section class="container">
+      <div id="storefront-grid" class="products-grid">
+        <div style="text-align:center; width:100%; grid-column:1/-1;">
+          <i class="lucide-loader animate-spin" style="width:48px;height:48px;color:var(--accent-solar);"></i>
+          <p style="margin-top:16px;">Loading catalog...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Supabase -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      lucide.createIcons();
+      const grid = document.getElementById('storefront-grid');
+      
+      try {
+        if (!window.supabaseClient) throw new Error('Supabase not connected');
+        const { data, error } = await window.supabaseClient.from('products').select('*').order('created_at', { ascending: true });
+        
+        if (error) throw error;
+        
+        if (!data || data.length === 0) {
+          grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No products found in the catalog.</p>';
+          return;
+        }
+        
+        grid.innerHTML = data.map(p => {
+          let specsHtml = '';
+          try {
+            const specs = typeof p.specs === 'string' ? JSON.parse(p.specs) : p.specs;
+            if (Array.isArray(specs)) {
+              specs.slice(0, 2).forEach(s => { // Show top 2 specs
+                specsHtml += `<div><div class="spec-mini-val">${s.value}</div><div class="spec-mini-lbl">${s.label}</div></div>`;
+              });
+            }
+          } catch(e) {}
+
+          return `
+            <div class="product-card">
+              <div class="product-icon-wrap">
+                <i data-lucide="${p.icon || 'box'}"></i>
+              </div>
+              <span class="product-category">${p.category}</span>
+              <h3 class="product-name">${p.name}</h3>
+              <p class="product-desc">${p.description}</p>
+              <div class="product-specs-mini">
+                ${specsHtml}
+              </div>
+              <a href="index.html#contact" class="btn btn-secondary" style="width:100%; text-align:center;">Request Quote</a>
+            </div>
+          `;
+        }).join('');
+        
+        lucide.createIcons();
+      } catch (err) {
+        console.error(err);
+        grid.innerHTML = '<p style="text-align:center; grid-column:1/-1; color:#ef4444;">Failed to load catalog.</p>';
+      }
+    });
+  </script>
+</body>
+</html>
