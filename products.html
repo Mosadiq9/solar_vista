@@ -104,7 +104,11 @@
         <i data-lucide="sun" class="logo-icon text-solar"></i>
         <span>SolarVista</span>
       </a>
-      <div class="nav-links">
+      <div class="nav-links" style="display: flex; align-items: center; gap: 24px;">
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark mode" style="background: transparent; border: none; color: var(--text-primary); cursor: pointer; display: flex;">
+          <i data-lucide="sun" class="sun-icon" style="display: none;"></i>
+          <i data-lucide="moon" class="moon-icon"></i>
+        </button>
         <a href="index.html" class="nav-link">Back to Home</a>
         <a href="index.html#contact" class="btn btn-primary">Get Free Quote</a>
       </div>
@@ -134,6 +138,38 @@
   <script src="js/supabase.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
+      // Initialize Theme
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) {
+        const sunIcon = themeToggle.querySelector('.sun-icon');
+        const moonIcon = themeToggle.querySelector('.moon-icon');
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'light' || (!savedTheme && !prefersDark)) {
+          document.body.setAttribute('data-theme', 'light');
+          if (sunIcon) sunIcon.style.display = 'block';
+          if (moonIcon) moonIcon.style.display = 'none';
+        } else {
+          document.body.setAttribute('data-theme', 'dark');
+          if (sunIcon) sunIcon.style.display = 'none';
+          if (moonIcon) moonIcon.style.display = 'block';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+          const newTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          document.body.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          if (newTheme === 'light') {
+            if (sunIcon) sunIcon.style.display = 'block';
+            if (moonIcon) moonIcon.style.display = 'none';
+          } else {
+            if (sunIcon) sunIcon.style.display = 'none';
+            if (moonIcon) moonIcon.style.display = 'block';
+          }
+        });
+      }
+
       lucide.createIcons();
       const grid = document.getElementById('storefront-grid');
       
