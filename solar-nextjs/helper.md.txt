@@ -1,0 +1,451 @@
+﻿Universal Software Best Practices
+Attach this file to your project root. AI IDEs (Cursor, Windsurf, GitHub Copilot, Claude Code) will follow these rules automatically.
+
+
+________________
+
+
+1. PROJECT STRUCTURE & ORGANISATION
+* Use feature-based folder structure:
+
+
+src/
+
+
+├── features/        # Each feature: components/, hooks/, services/, types/
+
+
+├── shared/          # Reusable: components/, utils/, constants/, hooks/
+
+
+├── assets/          # Images, fonts, icons
+
+
+├── config/          # App config, env, routes
+
+
+└── app/             # Entry point, providers, global layout
+
+
+* Config files (.env, tsconfig, .eslintrc, .prettierrc) at root only
+* Every folder must have index.ts barrel export
+* Never mix feature logic into shared/
+
+
+________________
+
+
+2. NAMING CONVENTIONS
+Thing
+	Convention
+	Example
+	Components
+	PascalCase
+	UserCard.tsx
+	Hooks
+	camelCase + "use" prefix
+	useAuthStore.ts
+	Utils/helpers
+	camelCase
+	formatDate.ts
+	Constants
+	UPPER_SNAKE_CASE
+	MAX_RETRY_COUNT
+	CSS classes
+	kebab-case
+	user-profile-card
+	Folders
+	kebab-case
+	user-profile/
+	API files
+	camelCase + "Api" suffix
+	userApi.ts
+	Types/Interfaces
+	PascalCase + "I" or "T" prefix
+	IUser, TApiResponse
+	
+
+________________
+
+
+3. UI / UX RULES
+* Mobile-first always — write base styles for mobile, scale up with breakpoints
+* All colors, spacing, and typography via design tokens / CSS variables — never hardcode hex values
+* Every async operation must have: loading state + error state + empty state
+* Use semantic HTML (<nav>, <main>, <section>, <article>, <button> not <div onclick>)
+* All images must have alt text; all form inputs must have <label>
+* Minimum touch target size: 44×44px
+* Dark mode: use CSS variables — never hardcode color: #000 or background: #fff
+
+
+________________
+
+
+4. CODE QUALITY
+* DRY: If you write the same logic twice, extract it into a shared util or hook
+* Functions must do one thing only — if the name has "and", split it
+* Max function length: 40 lines; max file length: 300 lines
+* No magic numbers or strings:
+
+
+// ❌ Bad
+
+
+if (status === 1) ...
+
+
+// ✅ Good
+
+
+if (status === USER_STATUS.ACTIVE) ...
+
+
+* Comments explain WHY, not WHAT — the code itself explains what
+* TypeScript strict mode always on; no any type — use unknown and narrow
+* Exports: named exports preferred over default exports (better refactoring support)
+
+
+________________
+
+
+5. COMPONENT RULES
+* One component per file
+* Props interface defined above the component, not inline
+* Destructure props at the top
+* Keep components pure — no side effects inside render
+* Separate container components (data fetching, state) from presentational components (UI only)
+
+
+UserProfileContainer.tsx  → fetches data, handles state
+
+
+UserProfileView.tsx        → receives props, renders UI
+
+
+________________
+
+
+6. STATE MANAGEMENT
+State type
+	Where to store
+	Local UI state (open/closed, tab)
+	useState
+	Shared UI state (theme, sidebar)
+	Context or Zustand
+	Server data
+	React Query / SWR
+	Form state
+	React Hook Form
+	URL state
+	Search params
+	
+
+* Never store server data in global state — use a server-state library
+* Never duplicate state — derive values instead of storing them
+
+
+________________
+
+
+7. API & DATA FETCHING
+* All API calls in src/features/{feature}/services/ — never inline in components
+* Always handle: loading, error, success, and empty cases
+* Use typed response interfaces for every API endpoint
+* Never expose raw API errors to users — map to user-friendly messages
+* Environment variables for all base URLs; never hardcode API URLs
+
+
+________________
+
+
+8. PERFORMANCE
+* Lazy load all routes by default
+* Images: use correct format (WebP), correct size, loading="lazy" for below-fold
+* Memoize expensive computations (useMemo) and stable callbacks (useCallback) — but only when profiling shows it's needed
+* Code split large third-party libraries
+* Never import an entire library for one function:
+
+
+// ❌ Bad
+
+
+import _ from 'lodash'
+
+
+// ✅ Good
+
+
+import debounce from 'lodash/debounce'
+
+
+________________
+
+
+9. SECURITY
+* Never store sensitive data (tokens, keys) in localStorage — use httpOnly cookies
+* Sanitise all user input before rendering — never use dangerouslySetInnerHTML without sanitising
+* No secrets or API keys in source code — use .env and ensure .env is in .gitignore
+* Validate input on both client and server
+* Use HTTPS-only API calls in production
+* Dependencies: run npm audit before every release
+
+
+________________
+
+
+10. ERROR HANDLING
+* Wrap every async call in try/catch
+* Use Error Boundaries around major page sections
+* Log errors to a monitoring service (Sentry etc.) — not just console.log
+* Every error shown to user must be: friendly message + what to do next
+* Never swallow errors silently:
+
+
+// ❌ Bad
+
+
+try { ... } catch (e) {}
+
+
+// ✅ Good
+
+
+try { ... } catch (e) { logger.error(e); showToast('Something went wrong. Try again.'); }
+
+
+________________
+
+
+11. TESTING
+* Unit tests: all utility functions and hooks
+* Integration tests: critical user flows (auth, form submission, data fetch)
+* E2E tests: happy path of core features (login, main action, logout)
+* Test file lives next to the file it tests: utils/formatDate.ts → utils/formatDate.test.ts
+* Never test implementation details — test behaviour
+* Minimum coverage target: 70% on critical paths
+
+
+________________
+
+
+12. GIT & VERSION CONTROL
+* Branch naming: feature/, fix/, chore/, hotfix/ prefixes
+* Commit message format (Conventional Commits):
+
+
+feat: add user profile page
+
+
+fix: resolve login redirect loop
+
+
+chore: update dependencies
+
+
+* Never commit directly to main or master
+* PRs must be reviewed before merge
+* .gitignore must include: node_modules/, .env, dist/, .DS_Store
+
+
+________________
+
+
+13. ENVIRONMENT & CONFIG
+.env.local       → local dev secrets (never committed)
+
+
+.env.development → dev environment defaults (committed)
+
+
+.env.staging     → staging config (committed, no secrets)
+
+
+.env.production  → production config (committed, no secrets)
+
+
+* Access via import.meta.env.VITE_* or process.env.NEXT_PUBLIC_* — never raw strings
+* All env vars documented in .env.example (committed with placeholder values)
+
+
+________________
+
+
+14. DOCUMENTATION
+* README.md at root must include: setup steps, env vars needed, how to run, how to deploy
+* Complex logic must have a JSDoc comment above the function
+* Architecture decisions documented in docs/decisions/ as ADR files
+* Component library documented in Storybook (if team size > 2)
+
+
+________________
+
+
+15. ACCESSIBILITY (a11y) CHECKLIST
+* All interactive elements reachable by keyboard (Tab, Enter, Space)
+* Focus indicator visible on all focusable elements
+* Color contrast ratio ≥ 4.5:1 for body text
+* No information conveyed by color alone — always add icon or text
+* ARIA labels on icon-only buttons
+* Modal traps focus and restores on close
+
+
+________________
+
+
+QUICK REFERENCE — THINGS TO ALWAYS DO
+✅ Feature-based folder structure
+
+
+✅ TypeScript strict mode
+
+
+✅ Design tokens for all visual values
+
+
+✅ Loading + error + empty state for every async
+
+
+✅ Semantic HTML
+
+
+✅ No secrets in code
+
+
+✅ Conventional commits
+
+
+✅ Lazy load routes
+
+
+✅ Error boundaries
+
+
+✅ Test critical paths
+QUICK REFERENCE — THINGS TO NEVER DO
+❌ Hardcode colors, URLs, or magic numbers
+
+
+❌ Use `any` in TypeScript
+
+
+❌ Fetch data inside components directly
+
+
+❌ Store tokens in localStorage
+
+
+❌ Skip error handling
+
+
+❌ Commit to main directly
+
+
+❌ Import full libraries for one function
+
+
+❌ Duplicate state
+
+
+❌ Use div for buttons/links
+
+
+❌ Leave console.log in production code
+
+
+________________
+
+
+16. CI/CD PIPELINE RULES
+* Every PR must auto-run: lint → type-check → tests → build (in that order)
+* Merge blocked if any step fails
+* Auto-deploy on merge to main → production; merge to develop → staging
+* Build artifacts cached — never rebuild unchanged code
+* Secrets injected by CI environment — never in pipeline config files
+
+
+________________
+
+
+17. CONTAINERISATION (Docker)
+* Every project must have a Dockerfile and .dockerignore
+* Multi-stage builds: builder stage (install + build) → runner stage (serve only)
+* Never run containers as root user
+* Pin base image versions: node:20-alpine not node:latest
+* docker-compose.yml for local dev with all services (app, db, cache)
+
+
+________________
+
+
+18. LOGGING STRATEGY
+* Never use console.log in production — use a structured logger (Winston, Pino)
+* Log levels: error (broken) → warn (unexpected) → info (key events) → debug (dev only)
+* Every log must include: timestamp, level, message, context (userId, requestId)
+* Errors sent to monitoring service (Sentry, Datadog) — not just logged to console
+* Never log sensitive data: passwords, tokens, PII
+
+
+________________
+
+
+19. API VERSIONING
+* Always version APIs from day one: /api/v1/users
+* Never make breaking changes to an existing version — release a new version
+* Deprecated endpoints return a Deprecation header with sunset date
+* API responses always include consistent envelope:
+
+
+{ "data": {}, "error": null, "meta": { "version": "v1" } }
+
+
+________________
+
+
+20. ANIMATION & MOTION
+* Use CSS transitions for simple state changes (hover, focus, show/hide)
+* Use CSS @keyframes for looping animations — not JS setInterval
+* All animations wrap in @media (prefers-reduced-motion: no-preference) — respect user settings
+* Duration guidelines: micro (100ms), standard (200ms), complex (300ms) — never exceed 500ms
+* Never animate width/height — animate transform and opacity only (GPU-accelerated)
+
+
+________________
+
+
+21. OFFLINE & NETWORK FAILURE HANDLING
+* Every API call must handle: timeout, network offline, 5xx, 4xx — separately
+* Show offline indicator when navigator.onLine is false
+* Retry failed requests with exponential backoff (1s → 2s → 4s, max 3 retries)
+* Cache critical read data so app is usable offline (Service Worker or React Query cache)
+* Queue write operations when offline, sync when back online
+
+
+________________
+
+
+22. CODE REVIEW CHECKLIST
+Before approving any PR, verify:
+
+
+* No new any types introduced
+* No hardcoded values (colors, URLs, strings)
+* All new async code has error handling
+* New components have loading + error + empty states
+* No secrets or sensitive data in diff
+* Tests added for new logic
+* No console.logs left in
+* Naming follows conventions
+* No files over 300 lines
+
+
+________________
+
+
+23. VERSIONING & CHANGELOG
+* Follow Semantic Versioning: MAJOR.MINOR.PATCH (e.g. 2.1.4)
+   * MAJOR → breaking change
+   * MINOR → new feature, backward compatible
+   * PATCH → bug fix
+* Maintain a CHANGELOG.md — updated on every release
+* Tag every release in git: git tag v2.1.4
+* Release notes written for humans, not developers
