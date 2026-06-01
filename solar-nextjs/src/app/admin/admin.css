@@ -6,6 +6,12 @@ body {
   color: var(--text-primary);
   height: 100vh;
   overflow: hidden;
+
+  --status-new-bg: rgba(16,185,129,0.5);
+  --status-contacted-bg: rgba(59,130,246,0.5);
+  --status-qualified-bg: rgba(168,85,247,0.5);
+  --status-proposal-bg: rgba(245,158,11,0.5);
+  --status-closed-bg: rgba(52,211,153,0.5);
 }
 
 .admin-view {
@@ -472,6 +478,12 @@ textarea:focus {
 .status-qualified { background: rgba(168,85,247,0.12); color: #d8b4fe; }
 .status-proposal  { background: rgba(245,158,11,0.12); color: #fcd34d; }
 .status-closed    { background: rgba(16,185,129,0.2);  color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+
+/* Booking Statuses */
+.status-upcoming    { background: rgba(59,130,246,0.12); color: #93c5fd; }
+.status-completed   { background: rgba(16,185,129,0.12); color: #6ee7b7; }
+.status-cancelled   { background: rgba(239,68,68,0.12); color: #fca5a5; }
+.status-rescheduled { background: rgba(245,158,11,0.12); color: #fcd34d; }
 
 /* =============================================
    FEATURE 4: SEARCH + FILTER TOOLBAR

@@ -1,28 +1,115 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Sun, LogOut, Activity, FileText, Calendar, Wrench, ShieldCheck, Download, AlertCircle, CheckCircle2 } from 'lucide-react';
 import CustomCursor from '@/shared/components/CustomCursor';
 import ThemeInit from '@/shared/components/ThemeInit';
+import { createBrowserClient } from '@supabase/ssr';
 
 export default function PortalDashboard() {
+  const router = useRouter();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+  const [session, setSession] = useState(null);
+  const [documents, setDocuments] = useState([]);
+  const [isDemo, setIsDemo] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [ticketSubject, setTicketSubject] = useState('');
   const [ticketMessage, setTicketMessage] = useState('');
-  const [ticketStatus, setTicketStatus] = useState('idle'); // idle, sending, sent
+  const [ticketStatus, setTicketStatus] = useState('idle'); // idle, sending, sent, error
 
-  const handleTicketSubmit = (e) => {
+  useEffect(() => {
+    const fetchSessionAndData = async () => {
+      // Check for demo mode
+      const demoFlag = localStorage.getItem('demo_mode') === 'true';
+      setIsDemo(demoFlag);
+
+      const { data: { session: authSession } } = await supabase.auth.getSession();
+      setSession(authSession);
+
+      if (!authSession && !demoFlag) {
+        // Not logged in and not demo
+        router.push('/login');
+        return;
+      }
+
+      if (authSession && !demoFlag) {
+        // Fetch real documents for the user
+        const { data: docs } = await supabase
+          .from('user_documents')
+          .select('*')
+          .eq('user_id', authSession.user.id)
+          .order('created_at', { ascending: false });
+        
+        if (docs) setDocuments(docs);
+      } else if (demoFlag) {
+        // Load mock documents for demo
+        setDocuments([
+          { id: 1, file_name: 'Purchase_Agreement_Signed.pdf', file_url: '#' },
+          { id: 2, file_name: 'Interconnection_Approval.pdf', file_url: '#' },
+          { id: 3, file_name: 'Warranty_Certificate.pdf', file_url: '#' }
+        ]);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchSessionAndData();
+  }, [supabase, router]);
+
+  const handleTicketSubmit = async (e) => {
     e.preventDefault();
     if (!ticketSubject || !ticketMessage) return;
     
     setTicketStatus('sending');
-    setTimeout(() => {
-      setTicketStatus('sent');
-      setTicketSubject('');
-      setTicketMessage('');
-      setTimeout(() => setTicketStatus('idle'), 3000);
-    }, 1500);
+
+    if (isDemo) {
+      setTimeout(() => {
+        setTicketStatus('sent');
+        setTicketSubject('');
+        setTicketMessage('');
+        setTimeout(() => setTicketStatus('idle'), 3000);
+      }, 1500);
+      return;
+    }
+
+    if (session) {
+      const { error } = await supabase.from('support_tickets').insert({
+        user_id: session.user.id,
+        subject: ticketSubject,
+        message: ticketMessage,
+      });
+
+      if (error) {
+        setTicketStatus('error');
+        console.error("Ticket error:", error);
+        setTimeout(() => setTicketStatus('idle'), 3000);
+      } else {
+        setTicketStatus('sent');
+        setTicketSubject('');
+        setTicketMessage('');
+        setTimeout(() => setTicketStatus('idle'), 3000);
+      }
+    }
   };
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    localStorage.removeItem('demo_mode');
+    document.cookie = 'demo_mode=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+    await supabase.auth.signOut();
+    router.push('/login');
+    router.refresh();
+  };
+
+  if (isLoading) {
+    return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)' }}><span style={{ color: 'var(--accent-solar)' }}>Loading Portal...</span></div>;
+  }
 
   return (
     <>
@@ -81,6 +168,8 @@ export default function PortalDashboard() {
             font-size: 0.9rem;
             font-weight: 500;
             transition: background 0.2s;
+            cursor: pointer;
+            border: none;
           }
           .logout-btn:hover { background: rgba(239, 68, 68, 0.2); }
           
@@ -243,8 +332,8 @@ export default function PortalDashboard() {
             <Sun className="text-sky-400" size={28} /> SolarVista Portal
           </Link>
           <div className="portal-user-actions">
-            <span className="user-greeting">Welcome back, <strong>Demo User</strong></span>
-            <Link href="/login" className="logout-btn"><LogOut size={16} /> Logout</Link>
+            <span className="user-greeting">Welcome back, <strong>{isDemo ? 'Demo User' : session?.user?.email}</strong></span>
+            <button onClick={handleLogout} className="logout-btn"><LogOut size={16} /> Logout</button>
           </div>
         </nav>
         
@@ -252,6 +341,7 @@ export default function PortalDashboard() {
           <div className="portal-header">
             <h1>Customer Dashboard</h1>
             <p>Manage your solar system, view documents, and request support.</p>
+            {isDemo && <div className="mt-4 inline-flex items-center gap-2 bg-amber-500/20 text-amber-400 px-4 py-2 rounded-md"><AlertCircle size={16} /> You are viewing this portal in Demo Mode.</div>}
           </div>
           
           <div className="portal-grid">
@@ -304,18 +394,16 @@ export default function PortalDashboard() {
                 <FileText className="text-sky-400" /> <h3>Document Center</h3>
               </div>
               <div className="doc-list">
-                <div className="doc-item">
-                  <div className="doc-info"><FileText size={18} className="text-slate-400" /> <span>Purchase_Agreement_Signed.pdf</span></div>
-                  <button className="download-btn"><Download size={16} /></button>
-                </div>
-                <div className="doc-item">
-                  <div className="doc-info"><FileText size={18} className="text-slate-400" /> <span>Interconnection_Approval.pdf</span></div>
-                  <button className="download-btn"><Download size={16} /></button>
-                </div>
-                <div className="doc-item">
-                  <div className="doc-info"><FileText size={18} className="text-slate-400" /> <span>Warranty_Certificate.pdf</span></div>
-                  <button className="download-btn"><Download size={16} /></button>
-                </div>
+                {documents.length > 0 ? (
+                  documents.map((doc) => (
+                    <div className="doc-item" key={doc.id}>
+                      <div className="doc-info"><FileText size={18} className="text-slate-400" /> <span>{doc.file_name}</span></div>
+                      <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="download-btn"><Download size={16} /></a>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-slate-400 italic">No documents available.</p>
+                )}
               </div>
             </div>
             
@@ -370,6 +458,7 @@ export default function PortalDashboard() {
                     {ticketStatus === 'idle' && <>Submit Ticket</>}
                     {ticketStatus === 'sending' && <>Submitting...</>}
                     {ticketStatus === 'sent' && <><CheckCircle2 size={18} /> Sent Successfully</>}
+                    {ticketStatus === 'error' && <><AlertCircle size={18} /> Failed to submit</>}
                   </button>
                 </div>
               </form>
@@ -381,3 +470,4 @@ export default function PortalDashboard() {
     </>
   );
 }
+

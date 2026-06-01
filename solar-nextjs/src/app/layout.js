@@ -25,6 +25,8 @@ export const metadata = {
   },
 };
 
+import { LanguageProvider } from '@/shared/context/LanguageContext';
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -35,19 +37,21 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body>
-        {children}
-        <Chatbot />
+        <LanguageProvider>
+          {children}
+          <Chatbot />
+        </LanguageProvider>
 
         {/* GSAP + ScrollTrigger */}
         <Script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" strategy="beforeInteractive" />
         <Script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" strategy="beforeInteractive" />
 
         {/* Three.js */}
-        <Script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js" strategy="beforeInteractive" />
-        <Script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" strategy="beforeInteractive" />
-        <Script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js" strategy="beforeInteractive" />
-        <Script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js" strategy="beforeInteractive" />
-        <Script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js" strategy="beforeInteractive" />
+        <Script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js" strategy="lazyOnload" />
+        <Script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" strategy="lazyOnload" />
+        <Script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js" strategy="lazyOnload" />
+        <Script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js" strategy="lazyOnload" />
+        <Script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js" strategy="lazyOnload" />
 
 
       </body>

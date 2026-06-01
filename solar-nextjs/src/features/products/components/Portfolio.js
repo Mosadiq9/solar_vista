@@ -3,7 +3,7 @@ import { Briefcase, Zap, DollarSign, ArrowRight } from 'lucide-react';
 import DynamicIcon from '@/shared/components/DynamicIcon';
 import { useEffect } from 'react';
 
-export default function Portfolio() {
+export default function Portfolio({ initialProjects }) {
   useEffect(() => {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const portfolioCards = document.querySelectorAll('.portfolio-card');
@@ -43,7 +43,7 @@ export default function Portfolio() {
     });
   }, []);
 
-  const projects = [
+  const defaultProjects = [
     { name: 'Johnson Residence', category: 'residential', gradient: 'portfolio-gradient-1', icon: 'home', power: '12.4 kW', savings: '$2,400/yr saved' },
     { name: 'Metro Business Park', category: 'commercial', gradient: 'portfolio-gradient-2', icon: 'building', power: '85 kW', savings: '$18,200/yr saved' },
     { name: 'Williams Family Home', category: 'residential', gradient: 'portfolio-gradient-3', icon: 'home', power: '8.8 kW', savings: '$1,800/yr saved' },
@@ -51,6 +51,8 @@ export default function Portfolio() {
     { name: 'Greenfield Office Complex', category: 'commercial', gradient: 'portfolio-gradient-5', icon: 'building', power: '120 kW', savings: '$24,500/yr saved' },
     { name: 'Martinez Solar Villa', category: 'residential', gradient: 'portfolio-gradient-6', icon: 'home', power: '15.2 kW', savings: '$3,100/yr saved' },
   ];
+
+  const projects = initialProjects?.length > 0 ? initialProjects : defaultProjects;
 
   return (
     <section id="portfolio" className="portfolio-section" aria-label="Recent projects">
@@ -70,17 +72,17 @@ export default function Portfolio() {
 
         <div className="portfolio-grid">
           {projects.map((p, i) => (
-            <div key={i} className="portfolio-card" data-category={p.category} data-animate>
-              <div className={`portfolio-image ${p.gradient}`}>
-                <DynamicIcon name={p.icon} className="portfolio-placeholder-icon"></DynamicIcon>
+            <div key={p.id || i} className="portfolio-card" data-category={p.category} data-animate>
+              <div className={`portfolio-image ${p.gradient || 'portfolio-gradient-1'}`} style={p.image_url ? { backgroundImage: `url(${p.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
+                {!p.image_url && <DynamicIcon name={p.icon || 'home'} className="portfolio-placeholder-icon"></DynamicIcon>}
               </div>
               <div className="portfolio-overlay">
                 <h3 className="portfolio-title">{p.name}</h3>
                 <div className="portfolio-meta">
-                  <span className="portfolio-meta-item"><Zap></Zap> {p.power}</span>
-                  <span className="portfolio-meta-item"><DollarSign></DollarSign> {p.savings}</span>
+                  <span className="portfolio-meta-item"><Zap></Zap> {p.power || 'N/A'}</span>
+                  <span className="portfolio-meta-item"><DollarSign></DollarSign> {p.savings || 'N/A'}</span>
                 </div>
-                <a href="#" className="portfolio-link">View Details <ArrowRight></ArrowRight></a>
+                <a href="/#contact" className="portfolio-link">View Details <ArrowRight></ArrowRight></a>
               </div>
             </div>
           ))}

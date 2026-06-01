@@ -7,6 +7,25 @@ export default function Blog({ initialBlogs = [] }) {
   // Use the server-fetched blogs, or fallback to empty array
   const blogs = initialBlogs;
 
+  const AUTHORS = {
+    'elena-rivera': { name: 'Dr. Elena Rivera', role: 'Energy Policy Analyst', initials: 'ER', gradient: 'linear-gradient(135deg, #f59e0b, #ef4444)' },
+    'marcus-chen': { name: 'Marcus Chen', role: 'CTO & Lead Engineer', initials: 'MC', gradient: 'linear-gradient(135deg, #3b82f6, #8b5cf6)' },
+    'sarah-okafor': { name: 'Sarah Okafor', role: 'Financial Advisor', initials: 'SO', gradient: 'linear-gradient(135deg, #10b981, #14b8a6)' }
+  };
+
+  const renderAuthor = (authorId) => {
+    const author = AUTHORS[authorId] || AUTHORS['elena-rivera'];
+    return (
+      <div className="blog-author-chip">
+        <div className="blog-author-avatar" style={{ background: author.gradient }}>{author.initials}</div>
+        <div className="blog-author-details">
+          <span className="blog-author-name">{author.name}</span>
+          <span className="blog-author-role">{author.role}</span>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <section id="blog" className="blog-section" aria-label="Solar resources and blog">
       <div className="container">
@@ -30,6 +49,9 @@ export default function Blog({ initialBlogs = [] }) {
                     <span className="blog-category">{blog.category || 'News'}</span>
                     <h3 className="blog-title">{blog.title}</h3>
                     <p className="blog-excerpt">{blog.excerpt || ''}</p>
+                    <div className="blog-meta">
+                      {renderAuthor(blog.author_slug || 'elena-rivera')}
+                    </div>
                     <a href="#" className="btn-text">Read More <ArrowRight /></a>
                   </div>
                 </article>
@@ -44,12 +66,14 @@ export default function Blog({ initialBlogs = [] }) {
                 </div>
                 <div className="blog-content">
                   <span className="blog-category">Tax Credits</span>
-                  <h3 className="blog-title">Federal Solar Tax Credit: Complete Guide for 2025</h3>
+                  <h3 className="blog-title">Federal Solar Tax Credit: Complete Guide for 2026</h3>
                   <p className="blog-excerpt">The Investment Tax Credit (ITC) allows homeowners to deduct 30% of solar installation costs from federal taxes. Learn how to maximize your savings and navigate the application process step by step.</p>
                   <div className="blog-meta">
-                    <span className="blog-author"><User /> Dr. Elena Rivera</span>
-                    <span className="blog-date"><Calendar /> May 15, 2025</span>
-                    <span className="blog-read-time"><Clock /> 8 min read</span>
+                    {renderAuthor('elena-rivera')}
+                    <div style={{display:'flex', gap:'12px', marginTop:'12px', fontSize:'0.85rem', color:'var(--text-secondary)'}}>
+                      <span className="blog-date" style={{display:'flex', alignItems:'center', gap:'4px'}}><Calendar size={14}/> May 15, 2026</span>
+                      <span className="blog-read-time" style={{display:'flex', alignItems:'center', gap:'4px'}}><Clock size={14}/> 8 min read</span>
+                    </div>
                   </div>
                 </div>
               </article>
@@ -63,9 +87,11 @@ export default function Blog({ initialBlogs = [] }) {
                   <h3 className="blog-title">How Solar Battery Storage Works</h3>
                   <p className="blog-excerpt">Discover how lithium-ion battery systems store excess solar energy for nighttime use and power outages. We break down the technology, costs, and top brands to help you make an informed decision.</p>
                   <div className="blog-meta">
-                    <span className="blog-author"><User /> Marcus Chen</span>
-                    <span className="blog-date"><Calendar /> May 8, 2025</span>
-                    <span className="blog-read-time"><Clock /> 6 min read</span>
+                    {renderAuthor('marcus-chen')}
+                    <div style={{display:'flex', gap:'12px', marginTop:'12px', fontSize:'0.85rem', color:'var(--text-secondary)'}}>
+                      <span className="blog-date" style={{display:'flex', alignItems:'center', gap:'4px'}}><Calendar size={14}/> May 8, 2026</span>
+                      <span className="blog-read-time" style={{display:'flex', alignItems:'center', gap:'4px'}}><Clock size={14}/> 6 min read</span>
+                    </div>
                   </div>
                 </div>
               </article>
@@ -79,9 +105,11 @@ export default function Blog({ initialBlogs = [] }) {
                   <h3 className="blog-title">Solar ROI: When Will Your Panels Pay For Themselves?</h3>
                   <p className="blog-excerpt">Most solar installations reach payback in 5–8 years, then generate free electricity for decades. Explore the key factors that affect your return on investment and how to accelerate your breakeven point.</p>
                   <div className="blog-meta">
-                    <span className="blog-author"><User /> Sarah Okafor</span>
-                    <span className="blog-date"><Calendar /> Apr 28, 2025</span>
-                    <span className="blog-read-time"><Clock /> 7 min read</span>
+                    {renderAuthor('sarah-okafor')}
+                    <div style={{display:'flex', gap:'12px', marginTop:'12px', fontSize:'0.85rem', color:'var(--text-secondary)'}}>
+                      <span className="blog-date" style={{display:'flex', alignItems:'center', gap:'4px'}}><Calendar size={14}/> Apr 28, 2026</span>
+                      <span className="blog-read-time" style={{display:'flex', alignItems:'center', gap:'4px'}}><Clock size={14}/> 7 min read</span>
+                    </div>
                   </div>
                 </div>
               </article>

@@ -1,8 +1,10 @@
 'use client';
 import { Sun, Moon, ArrowRight, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useLanguage } from '@/shared/context/LanguageContext';
 
 export default function Navbar() {
+  const { t, lang, changeLanguage } = useLanguage();
   const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
@@ -79,32 +81,34 @@ export default function Navbar() {
           <span>SolarVista</span>
         </a>
         <div className="nav-links" id="nav-links">
-          <a href="/#hero" className="nav-link active" data-section="hero">Home</a>
-          <a href="/#products" className="nav-link" data-section="products">Products</a>
-          <a href="/#features" className="nav-link" data-section="features">Why Us</a>
-          <a href="/#calculator" className="nav-link" data-section="calculator">Savings</a>
-          <a href="/#portfolio" className="nav-link" data-section="portfolio">Projects</a>
-          <a href="/roof-preview" className="nav-link" data-section="roof-preview">AI Roof</a>
-          <a href="/incentives" className="nav-link" data-section="incentives">Incentives</a>
-          <a href="/ecosystem" className="nav-link" data-section="ecosystem">Smart Home</a>
-          <a href="/monitoring" className="nav-link" data-section="monitoring">Live Demo</a>
-          <a href="/#blog" className="nav-link" data-section="blog">Resources</a>
-          <a href="/#contact" className="nav-link" data-section="contact">Contact</a>
+          <a href="/#hero" className="nav-link active" data-section="hero">{t('nav_home')}</a>
+          <a href="/#products" className="nav-link" data-section="products">{t('nav_products')}</a>
+          <a href="/#features" className="nav-link" data-section="features">{t('nav_why_us')}</a>
+          <a href="/#calculator" className="nav-link" data-section="calculator">{t('nav_savings')}</a>
+          <a href="/financing" className="nav-link" data-section="financing">{t('nav_financing')}</a>
+          <a href="/#portfolio" className="nav-link" data-section="portfolio">{t('nav_projects')}</a>
+          <a href="/roof-preview" className="nav-link" data-section="roof-preview">{t('nav_ai_roof')}</a>
+          <a href="/incentives" className="nav-link" data-section="incentives">{t('nav_incentives')}</a>
+          <a href="/ecosystem" className="nav-link" data-section="ecosystem">{t('nav_smart_home')}</a>
+          <a href="/ev-charger" className="nav-link" data-section="ev-charger">{t('nav_ev_charger')}</a>
+          <a href="/monitoring" className="nav-link" data-section="monitoring">{t('nav_live_demo')}</a>
+          <a href="/#blog" className="nav-link" data-section="blog">{t('nav_resources')}</a>
+          <a href="/#contact" className="nav-link" data-section="contact">{t('nav_contact')}</a>
           
           <div className="nav-mobile-social">
-            <a href="#" className="theme-toggle" aria-label="Facebook">
+            <a href="https://facebook.com/solarvista" target="_blank" rel="noopener noreferrer" className="theme-toggle" aria-label="Facebook">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
             </a>
-            <a href="#" className="theme-toggle" aria-label="Twitter">
+            <a href="https://twitter.com/solarvista" target="_blank" rel="noopener noreferrer" className="theme-toggle" aria-label="Twitter">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
             </a>
-            <a href="#" className="theme-toggle" aria-label="Instagram">
+            <a href="https://instagram.com/solarvista" target="_blank" rel="noopener noreferrer" className="theme-toggle" aria-label="Instagram">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
-            <a href="#" className="theme-toggle" aria-label="LinkedIn">
+            <a href="https://linkedin.com/company/solarvista" target="_blank" rel="noopener noreferrer" className="theme-toggle" aria-label="LinkedIn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
             </a>
-            <a href="#" className="theme-toggle" aria-label="YouTube">
+            <a href="https://youtube.com/solarvista" target="_blank" rel="noopener noreferrer" className="theme-toggle" aria-label="YouTube">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
             </a>
           </div>
@@ -129,29 +133,38 @@ export default function Navbar() {
         `}</style>
         <div className="nav-actions">
           <div className="nav-social" style={{ display: 'flex', gap: '4px', marginRight: '8px' }}>
-            <a href="#" className="theme-toggle" aria-label="Facebook">
+            <a href="https://facebook.com/solarvista" target="_blank" rel="noopener noreferrer" className="theme-toggle" aria-label="Facebook">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
             </a>
-            <a href="#" className="theme-toggle" aria-label="Twitter">
+            <a href="https://twitter.com/solarvista" target="_blank" rel="noopener noreferrer" className="theme-toggle" aria-label="Twitter">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
             </a>
-            <a href="#" className="theme-toggle" aria-label="Instagram">
+            <a href="https://instagram.com/solarvista" target="_blank" rel="noopener noreferrer" className="theme-toggle" aria-label="Instagram">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
-            <a href="#" className="theme-toggle" aria-label="LinkedIn">
+            <a href="https://linkedin.com/company/solarvista" target="_blank" rel="noopener noreferrer" className="theme-toggle" aria-label="LinkedIn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
             </a>
-            <a href="#" className="theme-toggle" aria-label="YouTube">
+            <a href="https://youtube.com/solarvista" target="_blank" rel="noopener noreferrer" className="theme-toggle" aria-label="YouTube">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
             </a>
           </div>
+
           <button id="theme-toggle" className="theme-toggle" aria-label="Toggle light/dark mode" onClick={toggleTheme}>
             {theme === 'dark' ? <Sun className="sun-icon" /> : <Moon className="moon-icon" />}
+          </button>
+          <button 
+            className="theme-toggle" 
+            aria-label="Toggle Language" 
+            onClick={() => changeLanguage(lang === 'en' ? 'fr' : 'en')}
+            style={{ fontWeight: 600, fontSize: '14px', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            {lang === 'en' ? 'EN' : 'FR'}
           </button>
           <a href="/login" className="theme-toggle" aria-label="Customer Login" style={{display:'flex', alignItems:'center', justifyContent:'center', textDecoration:'none', color:'inherit'}}>
             <User size={20} />
           </a>
-          <a href="/#booking" className="nav-cta">Book Consultation <ArrowRight></ArrowRight></a>
+          <a href="/#booking" className="nav-cta">{t('nav_book_consultation')} <ArrowRight></ArrowRight></a>
           <button className="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
             <span></span><span></span><span></span>
           </button>

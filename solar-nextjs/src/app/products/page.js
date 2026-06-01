@@ -84,11 +84,14 @@ export default function ProductsPage() {
         .storefront-header {
           padding: 180px 0 80px 0;
           text-align: center;
-          background: radial-gradient(circle at top, rgba(245, 158, 11, 0.1) 0%, var(--c-bg) 60%);
+          background: radial-gradient(circle at top, rgba(245, 158, 11, 0.1) 0%, transparent 60%);
         }
         .storefront-header h1 {
           font-size: 3.5rem;
           margin-bottom: 24px;
+          background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
         }
         .storefront-header p {
           font-size: 1.25rem;
@@ -106,59 +109,84 @@ export default function ProductsPage() {
           background: var(--c-surface);
           border: 1px solid var(--c-border);
           border-radius: 24px;
-          padding: 32px;
-          transition: var(--transition);
+          padding: 40px;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
           display: flex;
           flex-direction: column;
+          position: relative;
+          overflow: hidden;
+        }
+        .product-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0; height: 150px;
+          background: linear-gradient(180deg, rgba(245, 158, 11, 0.05) 0%, transparent 100%);
+          z-index: 0;
+          pointer-events: none;
+        }
+        .product-card > * {
+          position: relative;
+          z-index: 1;
         }
         .product-card:hover {
-          transform: translateY(-5px);
-          box-shadow: var(--shadow-card);
-          border-color: rgba(245, 158, 11, 0.3);
+          transform: translateY(-8px);
+          box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+          border-color: rgba(245, 158, 11, 0.4);
+          background: var(--c-surface-hover);
         }
         .product-icon-wrap {
-          width: 64px;
-          height: 64px;
-          border-radius: 16px;
-          background: rgba(245, 158, 11, 0.1);
+          width: 72px;
+          height: 72px;
+          border-radius: 20px;
+          background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.05) 100%);
+          border: 1px solid rgba(245, 158, 11, 0.2);
           display: flex;
           align-items: center;
           justify-content: center;
-          margin-bottom: 24px;
+          margin-bottom: 32px;
           color: var(--c-primary);
+          box-shadow: 0 8px 16px -4px rgba(245, 158, 11, 0.1);
+        }
+        .product-icon-wrap svg {
+          width: 32px;
+          height: 32px;
         }
         .product-name {
-          font-size: 1.5rem;
+          font-size: 1.75rem;
           font-weight: 700;
           margin-bottom: 12px;
+          color: var(--c-text1);
         }
         .product-category {
           display: inline-block;
-          padding: 4px 12px;
-          background: rgba(255,255,255,0.05);
+          padding: 6px 14px;
+          background: rgba(245, 158, 11, 0.1);
+          border: 1px solid rgba(245, 158, 11, 0.2);
           border-radius: 20px;
-          font-size: 0.8rem;
+          font-size: 0.75rem;
+          font-weight: 600;
           text-transform: uppercase;
-          letter-spacing: 1px;
-          margin-bottom: 16px;
-          color: var(--c-text2);
+          letter-spacing: 1.5px;
+          margin-bottom: 24px;
+          color: var(--c-primary);
+          width: max-content;
         }
         .product-desc {
           color: var(--c-text2);
-          line-height: 1.6;
-          margin-bottom: 24px;
+          line-height: 1.7;
+          margin-bottom: 32px;
           flex: 1;
         }
         .product-specs-mini {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 16px;
-          margin-bottom: 32px;
+          gap: 20px;
+          margin-bottom: 40px;
           padding-top: 24px;
           border-top: 1px solid var(--c-border);
         }
-        .spec-mini-val { font-size: 1.25rem; font-weight: 700; font-family: var(--font-head); }
-        .spec-mini-lbl { font-size: 0.85rem; color: var(--c-text2); }
+        .spec-mini-val { font-size: 1.5rem; font-weight: 700; font-family: var(--font-head); color: var(--c-text1); margin-bottom: 4px; }
+        .spec-mini-lbl { font-size: 0.85rem; color: var(--c-text2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
       `}} />
 
       {/* Minimal Nav */}
@@ -208,10 +236,10 @@ export default function ProductsPage() {
                 
                 return (
                   <div key={p.id} className="product-card">
+                    <span className="product-category">{p.category}</span>
                     <div className="product-icon-wrap">
                       <DynamicIcon name={p.icon || 'box'}></DynamicIcon>
                     </div>
-                    <span className="product-category">{p.category}</span>
                     <h3 className="product-name">{p.name}</h3>
                     <p className="product-desc">{p.description}</p>
                     <div className="product-specs-mini">
@@ -222,7 +250,7 @@ export default function ProductsPage() {
                         </div>
                       ))}
                     </div>
-                    <Link href="/#contact" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
+                    <Link href="/#contact" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
                       Request Quote
                     </Link>
                   </div>

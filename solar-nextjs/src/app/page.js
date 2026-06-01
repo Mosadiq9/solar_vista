@@ -25,13 +25,17 @@ export default async function Home() {
   const supabase = createServerClient();
   
   // Fetch data server-side
-  const [blogsRes, productsRes] = await Promise.all([
+  const [blogsRes, productsRes, projectsRes, testimonialsRes] = await Promise.all([
     supabase.from('blogs').select('*').order('created_at', { ascending: false }).limit(3),
-    supabase.from('products').select('*').order('created_at', { ascending: false })
+    supabase.from('products').select('*').order('created_at', { ascending: false }),
+    supabase.from('projects').select('*').order('created_at', { ascending: false }),
+    supabase.from('testimonials').select('*').order('created_at', { ascending: false })
   ]);
 
   const blogs = blogsRes.data || [];
   const products = productsRes.data || [];
+  const projects = projectsRes.data || [];
+  const testimonials = testimonialsRes.data || [];
 
   return (
     <>
@@ -44,8 +48,8 @@ export default async function Home() {
       <Features />
       <Process />
       <Calculator />
-      <Portfolio />
-      <Testimonials />
+      <Portfolio initialProjects={projects} />
+      <Testimonials initialTestimonials={testimonials} />
       <Partners />
       <Blog initialBlogs={blogs} />
       <BookingCalendar />

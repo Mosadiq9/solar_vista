@@ -53,11 +53,13 @@ export default function BookingCalendar() {
     const formattedDate = `${monthNames[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()} at ${selectedTime}`;
     
     try {
-      const { error } = await supabase.from('leads').insert([{
+      // Changed from leads to bookings table
+      const { error } = await supabase.from('bookings').insert([{
         name: formData.name,
         email: formData.email,
-        message: `Consultation Scheduled for ${formattedDate}`,
-        status: 'scheduled'
+        date: `${monthNames[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}`,
+        time: selectedTime,
+        status: 'upcoming'
       }]);
       
       if (error) throw error;

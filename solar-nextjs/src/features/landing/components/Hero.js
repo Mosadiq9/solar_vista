@@ -1,8 +1,10 @@
 'use client';
 import { Sparkles, Calculator, Box, ChevronDown } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { useLanguage } from '@/shared/context/LanguageContext';
 
 export default function Hero() {
+  const { t } = useLanguage();
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -137,23 +139,23 @@ export default function Hero() {
       <div className="hero-content container">
         <div className="hero-badge" data-animate>
           <Sparkles></Sparkles>
-          <span>#1 Rated Solar Provider 2025</span>
+          <span>#1 Rated Solar Provider 2026</span>
         </div>
 
         <h1 className="hero-title" data-animate>
-          Harness the <span className="gradient-text">Power of the Sun</span>
+          {t('hero_headline_1')} <span className="gradient-text">{t('hero_headline_2')}</span>
         </h1>
 
         <p className="hero-subtitle" data-animate>
-          Transform your energy future with cutting-edge solar technology. Save up to 80% on electricity bills while powering a sustainable tomorrow.
+          {t('hero_subtitle')}
         </p>
 
         <div className="hero-ctas" data-animate>
           <a href="#calculator" className="btn btn-primary">
-            <Calculator></Calculator> Calculate Savings
+            <Calculator></Calculator> {t('hero_cta_savings')}
           </a>
           <a href="/products" className="btn btn-secondary">
-            <Box></Box> Explore Products
+            <Box></Box> {t('hero_cta_design')}
           </a>
         </div>
 

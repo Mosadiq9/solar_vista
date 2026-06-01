@@ -2,22 +2,50 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sun, Mail, Lock, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { Sun, Mail, Lock, ArrowRight, ShieldCheck, Zap, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
+import { createBrowserClient } from '@supabase/ssr';
 
 export default function LoginPage() {
   const router = useRouter();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setErrorMsg(null);
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setErrorMsg(error.message);
+      setIsLoading(false);
+    } else {
+      router.push('/portal');
+      router.refresh();
+    }
+  };
 
   const handleDemoLogin = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate auth delay
+    // Real auth bypass for demo purposes
+    // We set a local storage flag and a cookie so the middleware can read it
+    localStorage.setItem('demo_mode', 'true');
+    document.cookie = "demo_mode=true; path=/; max-age=3600"; // 1 hour demo
     setTimeout(() => {
       router.push('/portal');
-    }, 1500);
+    }, 1000);
   };
 
   return (
@@ -204,7 +232,14 @@ export default function LoginPage() {
           <h1>Welcome Back</h1>
           <p>Sign in to your SolarVista Customer Portal</p>
           
-          <form onSubmit={handleDemoLogin}>
+          {errorMsg && (
+            <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', padding: '12px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+              <AlertCircle size={18} />
+              <span style={{ fontSize: '0.9rem' }}>{errorMsg}</span>
+            </div>
+          )}
+          
+          <form onSubmit={handleLogin}>
             <div className="form-group">
               <label>Email Address</label>
               <div className="input-wrapper">
