@@ -1,6 +1,7 @@
 'use client';
 import { ArrowRight, BookOpen, Receipt, User, Calendar, Clock, BatteryCharging, TrendingUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import DynamicIcon from '@/shared/components/DynamicIcon';
 
 export default function Blog({ initialBlogs = [] }) {
@@ -39,6 +40,11 @@ export default function Blog({ initialBlogs = [] }) {
           {blogs.length > 0 ? (
             blogs.map((blog, index) => {
               const iconName = blog.icon || (index % 3 === 0 ? 'sun' : index % 3 === 1 ? 'battery-charging' : 'bar-chart');
+              
+              // Dynamically pick author to avoid all being Elena
+              const authorOptions = ['elena-rivera', 'marcus-chen', 'sarah-okafor'];
+              const authorSlug = blog.author_slug || authorOptions[index % 3];
+              
               return (
                 <article key={blog.id} className="blog-card" data-animate>
                   <div className="blog-image">
@@ -50,9 +56,9 @@ export default function Blog({ initialBlogs = [] }) {
                     <h3 className="blog-title">{blog.title}</h3>
                     <p className="blog-excerpt">{blog.excerpt || ''}</p>
                     <div className="blog-meta">
-                      {renderAuthor(blog.author_slug || 'elena-rivera')}
+                      {renderAuthor(authorSlug)}
                     </div>
-                    <a href="#" className="btn-text">Read More <ArrowRight /></a>
+                    <Link href={`/blog/${blog.slug || blog.id}`} className="btn-text">Read More <ArrowRight /></Link>
                   </div>
                 </article>
               );

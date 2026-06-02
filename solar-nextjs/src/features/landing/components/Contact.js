@@ -119,7 +119,7 @@ export default function Contact() {
             <div className="info-card glass-card">
               <div className="info-icon"><Phone></Phone></div>
               <h4>Call Us</h4>
-              <p>+1 (888) SOLAR-VT</p>
+              <p>+1 (800) 123-4567</p>
             </div>
             <div className="info-card glass-card">
               <div className="info-icon"><Mail></Mail></div>
@@ -210,7 +210,7 @@ export default function Contact() {
             <div className="go-item">
               <h4>Texas, United States</h4>
               <p>100 Congress Ave<br/>Austin, TX 78701</p>
-              <div className="go-phone"><Phone size={18} color="var(--accent-orange)" /> +1 (512) 555-0198</div>
+              <div className="go-phone"><Phone size={18} color="var(--accent-orange)" /> +1 (800) 123-4567</div>
             </div>
           </div>
         </div>

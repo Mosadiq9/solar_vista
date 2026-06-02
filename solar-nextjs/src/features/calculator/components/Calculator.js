@@ -223,15 +223,22 @@ export default function Calculator() {
           // Fallback to mock logic
           const firstDigit = parseInt(raw[0]) || 0;
           let mockRate = 0.15;
-          if (firstDigit === 9) mockRate = 0.28;
-          else if (firstDigit === 1) mockRate = 0.22;
-          else if (firstDigit === 7) mockRate = 0.12;
-          else if (firstDigit === 3) mockRate = 0.13;
-          else if (firstDigit > 5) mockRate = 0.18;
+          let mockState = 'US Region';
+          if (firstDigit === 9) { mockRate = 0.28; mockState = 'West Coast'; }
+          else if (firstDigit === 1) { mockRate = 0.22; mockState = 'Northeast'; }
+          else if (firstDigit === 7) { mockRate = 0.12; mockState = 'South'; }
+          else if (firstDigit === 3) { mockRate = 0.13; mockState = 'Southeast'; }
+          else if (firstDigit > 5) { mockRate = 0.18; mockState = 'Midwest'; }
           currentRateRef.current = mockRate;
 
           setError(err.message);
-          setLocationInfo(null);
+          setLocationInfo({
+            city: 'Estimated',
+            state: mockState,
+            electricity_rate: mockRate,
+            avg_sun_hours: 5.0,
+            source: 'estimated'
+          });
           setLoading(false);
           calculate();
         }

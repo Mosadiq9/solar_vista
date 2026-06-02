@@ -23,27 +23,41 @@ export default function Stats() {
         element.textContent = current.toLocaleString() + suffix;
         if (progress < 1) {
           requestAnimationFrame(update);
+        } else {
+          element.textContent = end.toLocaleString() + suffix;
         }
       }
       requestAnimationFrame(update);
     }
 
+    const triggerAnimation = () => {
+      if (animated) return;
+      animated = true;
+      statNumbers.forEach((num, index) => {
+        const target = parseInt(num.dataset.target);
+        setTimeout(() => {
+          animateValue(num, 0, target, 2000);
+        }, index * 200);
+      });
+    };
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting && !animated) {
-          animated = true;
-          statNumbers.forEach((num, index) => {
-            const target = parseInt(num.dataset.target);
-            setTimeout(() => {
-              animateValue(num, 0, target, 2000);
-            }, index * 200);
-          });
+        if (entry.isIntersecting) {
+          triggerAnimation();
         }
       });
-    }, { threshold: 0.3 });
+    }, { threshold: 0.1 });
 
     const statsSection = document.getElementById('stats');
-    if (statsSection) observer.observe(statsSection);
+    if (statsSection) {
+      observer.observe(statsSection);
+      // Fallback: check if already in view on load
+      const rect = statsSection.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        triggerAnimation();
+      }
+    }
 
     return () => observer.disconnect();
   }, []);
