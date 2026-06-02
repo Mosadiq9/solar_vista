@@ -74,7 +74,7 @@ export default function Hero() {
       const sunX = width * 0.75;
       const sunY = height * 0.4;
       mainGradient = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, 350);
-      mainGradient.addColorStop(0, 'rgba(245, 158, 11, 0.15)');
+      mainGradient.addColorStop(0, 'rgba(245, 158, 11, 0.35)');
       mainGradient.addColorStop(0.3, 'rgba(245, 158, 11, 0.08)');
       mainGradient.addColorStop(0.6, 'rgba(245, 158, 11, 0.03)');
       mainGradient.addColorStop(1, 'rgba(245, 158, 11, 0)');

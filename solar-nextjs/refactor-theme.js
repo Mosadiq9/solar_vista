@@ -2,12 +2,13 @@ const fs = require('fs');
 const path = require('path');
 
 const filesToRefactor = [
-  'components/RoofPreview.js',
-  'components/IncentivesLookup.js',
-  'components/BookingCalendar.js',
-  'components/Ecosystem.js',
-  'app/login/page.js',
-  'app/portal/page.js'
+  'src/features/products/components/RoofPreview.js',
+  'src/features/calculator/components/IncentivesLookup.js',
+  'src/features/booking/components/BookingCalendar.js',
+  'src/features/products/components/Ecosystem.js',
+  'src/features/dashboard/components/LiveDashboard.js',
+  'src/app/login/page.js',
+  'src/app/portal/page.js'
 ];
 
 const replacements = [

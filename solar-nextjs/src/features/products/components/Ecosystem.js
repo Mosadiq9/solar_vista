@@ -181,15 +181,15 @@ export default function Ecosystem() {
 
         .calc-box {
           background: rgba(15,23,42,0.95);
-          border: 1px solid rgba(255,255,255,0.1);
+          border: 1px solid var(--glass-border);
           border-radius: 24px;
           padding: 40px;
           box-shadow: 0 20px 40px rgba(0,0,0,0.5);
           backdrop-filter: blur(12px);
-          color: #f8fafc;
+          color: var(--text-primary);
         }
-        .calc-label { display: flex; justify-content: space-between; margin-bottom: 16px; color: #94a3b8; }
-        .calc-val { color: #f8fafc; font-weight: 600; font-size: 1.25rem; }
+        .calc-label { display: flex; justify-content: space-between; margin-bottom: 16px; color: var(--text-secondary); }
+        .calc-val { color: var(--text-primary); font-weight: 600; font-size: 1.25rem; }
         
         input[type=range] {
           -webkit-appearance: none; width: 100%; background: transparent; margin-bottom: 40px;
@@ -210,7 +210,7 @@ export default function Ecosystem() {
           padding-top: 32px; margin-bottom: 32px;
         }
         .s-block { flex: 1; }
-        .s-label { color: #94a3b8; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 8px; }
+        .s-label { color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; margin-bottom: 8px; }
         .s-amount { font-size: 2rem; font-weight: 700; color: var(--accent-green); }
 
         .calc-btn {

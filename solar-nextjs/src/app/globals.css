@@ -7,11 +7,11 @@
 }
 
 :root {
-  /* Colors */
-  --bg-primary: #0a0e17;
-  --bg-secondary: #111827;
-  --bg-tertiary: #1a1f2e;
-  --bg-card: #151b2b;
+  /* Colors — warm solar palette */
+  --bg-primary: #0d0b0a;
+  --bg-secondary: #15110d;
+  --bg-tertiary: #1c1714;
+  --bg-card: #181310;
   --accent-solar: #f59e0b;
   --accent-glow: #fbbf24;
   --accent-orange: #f97316;
@@ -26,11 +26,15 @@
   --gradient-sky: linear-gradient(135deg, #3b82f6, #06b6d4);
   --gradient-green: linear-gradient(135deg, #10b981, #059669);
   --gradient-purple: linear-gradient(135deg, #8b5cf6, #a855f7);
-  --glass-bg: rgba(26, 31, 46, 0.98);
-  --glass-bg-hover: rgba(30, 36, 52, 1);
+  --glass-bg: rgba(28, 23, 18, 0.98);
+  --glass-bg-hover: rgba(34, 28, 22, 1);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-border-hover: rgba(255, 255, 255, 0.15);
-  --nav-bg: rgba(10, 14, 23, 0.98);
+  --nav-bg: rgba(13, 11, 10, 0.98);
+  --gradient-stats-bg: linear-gradient(180deg, #15110d 0%, #1a1308 50%, #15110d 100%);
+  --texture-features-bg: linear-gradient(rgba(245, 158, 11, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(245, 158, 11, 0.035) 1px, transparent 1px);
+  --hero-glow-1: rgba(245, 158, 11, 0.12);
+  --hero-glow-2: rgba(249, 115, 22, 0.06);
 
   /* Typography */
   --font-display: 'Outfit', sans-serif;
@@ -72,6 +76,10 @@
   --glass-border: rgba(15, 23, 42, 0.06);
   --glass-border-hover: rgba(15, 23, 42, 0.12);
   --nav-bg: rgba(248, 250, 252, 0.95);
+  --gradient-stats-bg: var(--bg-secondary);
+  --texture-features-bg: linear-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(245, 158, 11, 0.08) 1px, transparent 1px);
+  --hero-glow-1: rgba(245, 158, 11, 0.05);
+  --hero-glow-2: rgba(249, 115, 22, 0.02);
   --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
   --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
   --shadow-lg: 0 8px 32px rgba(15, 23, 42, 0.08);
@@ -519,6 +527,18 @@ h4 {
   padding-top: 80px;
 }
 
+/* Warm amber radial glow behind hero content */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 40%, var(--hero-glow-1) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 30% 60%, var(--hero-glow-2) 0%, transparent 60%);
+  z-index: 0;
+  pointer-events: none;
+}
+
 #hero-canvas {
   position: absolute;
   top: 0;
@@ -545,8 +565,19 @@ h4 {
   font-weight: 600;
   color: var(--accent-solar);
   margin-bottom: 24px;
-  border: 1px solid rgba(245, 158, 11, 0.2);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent 30%,
+      rgba(245, 158, 11, 0.12) 48%,
+      rgba(251, 191, 36, 0.22) 50%,
+      rgba(245, 158, 11, 0.12) 52%,
+      transparent 70%
+    );
+  background-color: rgba(255, 255, 255, 0.03);
+  background-size: 200% 100%;
+  animation: sun-ray-sweep 4s ease-in-out infinite;
   backdrop-filter: blur(10px);
 }
 
@@ -614,7 +645,8 @@ h4 {
 .stats-section {
   padding: 80px 0;
   position: relative;
-  background-color: var(--bg-secondary);
+  /* Subtle warm amber gradient — not flat dark */
+  background: var(--gradient-stats-bg);
 }
 
 .stats-grid {
@@ -858,6 +890,9 @@ h4 {
 .features-section {
   padding: var(--section-padding);
   background-color: var(--bg-primary);
+  /* Subtle solar panel grid texture */
+  background-image: var(--texture-features-bg);
+  background-size: 40px 40px;
 }
 
 .features-grid {
@@ -993,7 +1028,11 @@ h4 {
 .process-step.active .step-icon-wrap {
   border-color: var(--accent-solar);
   background: var(--gradient-solar);
-  box-shadow: var(--shadow-glow);
+  box-shadow:
+    0 0 20px rgba(245, 158, 11, 0.45),
+    0 0 40px rgba(245, 158, 11, 0.22),
+    0 0 60px rgba(249, 115, 22, 0.1);
+  animation: warm-glow-pulse 2.5s ease-in-out infinite;
 }
 
 .process-step.active .step-icon-wrap i {
@@ -1632,8 +1671,9 @@ input[type=range]::-webkit-slider-thumb:hover {
 }
 
 .partner-item:hover {
-  color: var(--text-primary);
+  color: var(--accent-solar);
   opacity: 1;
+  text-shadow: 0 0 20px rgba(245, 158, 11, 0.35), 0 0 40px rgba(245, 158, 11, 0.15);
 }
 
 .certifications-grid {
@@ -1650,6 +1690,15 @@ input[type=range]::-webkit-slider-thumb:hover {
   align-items: center;
   gap: 12px;
   border-radius: 12px;
+  transition: var(--transition-base);
+}
+
+.cert-badge:hover {
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow:
+    0 0 16px rgba(245, 158, 11, 0.18),
+    0 0 32px rgba(245, 158, 11, 0.07),
+    inset 0 0 16px rgba(245, 158, 11, 0.04);
 }
 
 .cert-badge i {
@@ -2837,6 +2886,55 @@ textarea {
   100% {
     left: 200%;
   }
+}
+
+/* ── Solar Warmth Animations ── */
+
+@keyframes sun-ray-sweep {
+  0%, 20% {
+    background-position: -200% center, center center;
+  }
+  80%, 100% {
+    background-position: 200% center, center center;
+  }
+}
+
+@keyframes warm-glow-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(245, 158, 11, 0.45),
+      0 0 40px rgba(245, 158, 11, 0.22),
+      0 0 60px rgba(249, 115, 22, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(245, 158, 11, 0.65),
+      0 0 60px rgba(245, 158, 11, 0.3),
+      0 0 80px rgba(249, 115, 22, 0.18);
+  }
+}
+
+@keyframes energy-pulse {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  70%, 100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+
+/* Hero CTA primary button — energy pulse ring */
+.hero-ctas .btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 14px;
+  background: transparent;
+  border: 2px solid rgba(245, 158, 11, 0.5);
+  animation: energy-pulse 2.2s ease-out infinite;
+  pointer-events: none;
 }
 
 .animate-float {

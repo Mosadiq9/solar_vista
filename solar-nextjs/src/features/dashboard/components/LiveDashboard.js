@@ -47,7 +47,9 @@ export default function LiveDashboard() {
 
   useEffect(() => {
     setData(generateHistoricalData());
+  }, []);
 
+  useEffect(() => {
     const interval = setInterval(() => {
       const hour = new Date().getHours();
       
@@ -104,8 +106,8 @@ export default function LiveDashboard() {
       <style>{`
         .dashboard-wrapper {
           padding: 120px 0 80px 0;
-          background: #09090b;
-          color: #f8fafc;
+          background: var(--bg-primary);
+          color: var(--text-primary);
           min-height: 100vh;
         }
         .dashboard-container {
@@ -121,12 +123,12 @@ export default function LiveDashboard() {
           font-size: 3rem;
           font-weight: 700;
           margin-bottom: 16px;
-          background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+          background: linear-gradient(135deg, var(--accent-glow) 0%, var(--accent-solar) 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
         .dashboard-header p {
-          color: #94a3b8;
+          color: var(--text-secondary);
           font-size: 1.1rem;
         }
         .metrics-grid {
@@ -136,8 +138,8 @@ export default function LiveDashboard() {
           margin-bottom: 40px;
         }
         .metric-card {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: var(--glass-bg);
+          border: 1px solid var(--glass-border);
           border-radius: 20px;
           padding: 24px;
           display: flex;
@@ -157,16 +159,16 @@ export default function LiveDashboard() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(255, 255, 255, 0.05);
+          background: var(--glass-bg);
         }
-        .metric-icon.solar { color: #fbbf24; background: rgba(251, 191, 36, 0.1); }
-        .metric-icon.home { color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
-        .metric-icon.battery { color: #10b981; background: rgba(16, 185, 129, 0.1); }
+        .metric-icon.solar { color: var(--accent-glow); background: rgba(251, 191, 36, 0.1); }
+        .metric-icon.home { color: var(--accent-cyan); background: rgba(56, 189, 248, 0.1); }
+        .metric-icon.battery { color: var(--accent-green); background: rgba(16, 185, 129, 0.1); }
         .metric-icon.grid { color: #8b5cf6; background: rgba(139, 92, 246, 0.1); }
         
         .metric-details h3 {
           font-size: 0.9rem;
-          color: #94a3b8;
+          color: var(--text-secondary);
           text-transform: uppercase;
           letter-spacing: 1px;
           margin-bottom: 4px;
@@ -174,14 +176,14 @@ export default function LiveDashboard() {
         .metric-details .value {
           font-size: 2rem;
           font-weight: 700;
-          color: #fff;
+          color: var(--text-primary);
           display: flex;
           align-items: baseline;
           gap: 4px;
         }
         .metric-details .unit {
           font-size: 1rem;
-          color: #64748b;
+          color: var(--text-muted);
           font-weight: 500;
         }
         
@@ -196,8 +198,8 @@ export default function LiveDashboard() {
         }
         
         .chart-panel, .impact-panel {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: var(--glass-bg);
+          border: 1px solid var(--glass-border);
           border-radius: 24px;
           padding: 32px;
           backdrop-filter: blur(12px);
@@ -217,7 +219,7 @@ export default function LiveDashboard() {
           align-items: center;
           gap: 20px;
           padding: 24px;
-          background: rgba(0, 0, 0, 0.2);
+          background: var(--bg-tertiary);
           border-radius: 16px;
           margin-bottom: 16px;
         }
@@ -229,10 +231,10 @@ export default function LiveDashboard() {
           align-items: center;
           justify-content: center;
         }
-        .impact-item .icon.green { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .impact-item .icon.blue { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
-        .impact-info h4 { color: #94a3b8; font-size: 0.9rem; margin-bottom: 4px; }
-        .impact-info .val { font-size: 1.75rem; font-weight: 700; color: #fff; }
+        .impact-item .icon.green { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+        .impact-item .icon.blue { background: rgba(56, 189, 248, 0.2); color: var(--accent-cyan); }
+        .impact-info h4 { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 4px; }
+        .impact-info .val { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
       `}</style>
 
       <div className="dashboard-container">
