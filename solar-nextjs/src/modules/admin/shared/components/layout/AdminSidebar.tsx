@@ -147,6 +147,9 @@ export function AdminSidebar() {
     items: group.items.filter(item => currentUser && item.roles.includes(currentUser.role))
   })).filter(group => group.items.length > 0);
 
+  console.log('[DEBUG AdminSidebar] currentUser:', currentUser);
+  console.log('[DEBUG AdminSidebar] filteredGroups length:', filteredGroups.length);
+
   return (
     <aside
       className={cn(

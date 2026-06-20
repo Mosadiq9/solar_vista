@@ -59,7 +59,6 @@ export function RoleSwitcher() {
                 onClick={() => {
                   setRole(option.role);
                   setIsOpen(false);
-                  window.location.reload(); // Hard reload to reset state and clear any cached data easily
                 }}
                 className={cn(
                   "flex w-full items-center gap-2 rounded-lg px-2 py-2 text-xs font-medium transition-colors",

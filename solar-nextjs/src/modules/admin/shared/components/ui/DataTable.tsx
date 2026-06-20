@@ -26,7 +26,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   isLoading = false,
-  emptyIcon,
+  emptyIcon: EmptyIcon,
   emptyMessage = 'No data found',
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -110,7 +110,7 @@ export function DataTable<TData, TValue>({
               <tr>
                 <td colSpan={columns.length} className="h-48">
                   <EmptyState
-                    icon={emptyIcon}
+                    icon={EmptyIcon ? <EmptyIcon className="h-8 w-8" /> : undefined}
                     title={emptyMessage}
                     description="When you create records, they will appear here."
                   />

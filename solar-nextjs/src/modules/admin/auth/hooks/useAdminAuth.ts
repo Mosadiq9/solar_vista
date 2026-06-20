@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import type { AdminRole } from '@/modules/admin/types';
 import { createClient } from '@/services/supabase/client';
 import { DB_TABLES } from '@/config/db-tables';
+import { useAuthStore } from '@/modules/crm/auth/store/useAuthStore';
 // import { useTenant } from '@/providers/TenantProvider';
 
 interface AdminAuthState {
@@ -46,12 +47,18 @@ export function useAdminAuth(): AdminAuthState {
           setUser(null);
         } else {
           console.log('[useAdminAuth] User role fetched successfully:', adminUser.role);
-          setUser({
+          const finalRole = (adminUser.role as AdminRole) || 'super_admin'; // Fallback for null roles
+          
+          const userData = {
             id: userId,
             email: email,
-            name: name,
-            role: adminUser.role as AdminRole,
-          });
+            name: name, // Ensure UserProfile shape matches AdminRole
+            full_name: name,
+            role: finalRole,
+          };
+          
+          setUser(userData);
+          useAuthStore.getState().setUser(userData);
         }
       } catch (err) {
         console.error('[useAdminAuth] Exception in fetchUserRole:', err);
@@ -63,26 +70,30 @@ export function useAdminAuth(): AdminAuthState {
     };
 
     const checkSession = async () => {
-      console.log('[useAdminAuth] Checking active Supabase session...');
       try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
+        console.log('[DEBUG] Calling getSession(). URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+        const sessionResult = await supabase.auth.getSession();
+        console.log('[DEBUG] getSession() returned!', sessionResult);
+        
+        const session = sessionResult?.data?.session;
         if (session?.user) {
-          console.log('[useAdminAuth] Session user found:', session.user.email);
+          console.log('[DEBUG] Session found, calling fetchUserRole...');
           await fetchUserRole(
             session.user.id,
             session.user.email || '',
             session.user.user_metadata?.name || 'Admin User'
           );
+          console.log('[DEBUG] fetchUserRole completed.');
         } else {
-          console.log('[useAdminAuth] No active session found.');
+          console.log('[DEBUG] No session found, setting user to null.');
           setUser(null);
+          useAuthStore.getState().setUser(null);
           setIsLoading(false);
         }
       } catch (err) {
-        console.error('[useAdminAuth] Exception in checkSession:', err);
+        console.error('[DEBUG] checkSession threw an error:', err);
         setUser(null);
+        useAuthStore.getState().setUser(null);
         setIsLoading(false);
       }
     };
@@ -107,11 +118,13 @@ export function useAdminAuth(): AdminAuthState {
             );
           } else {
             setUser(null);
+            useAuthStore.getState().setUser(null);
             setIsLoading(false);
           }
         } catch (err) {
           console.error('[useAdminAuth] Exception in onAuthStateChange handler:', err);
           setUser(null);
+          useAuthStore.getState().setUser(null);
           setIsLoading(false);
         }
       });
@@ -132,6 +145,7 @@ export function useAdminAuth(): AdminAuthState {
     const supabase = createClient();
     await supabase.auth.signOut();
     setUser(null);
+    useAuthStore.getState().setUser(null);
     setIsLoading(false);
     window.location.href = '/admin/login';
   };
